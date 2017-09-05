@@ -5,18 +5,11 @@
  */
 package steakie.pong.elemente;
 
-/**
- *
- * @author it3-schueler30
- */
-public class Spielstand {
+public class Score {
 
     public int L = 0;
     public int R = 0;
 
-    public Spielstand(int l, int r) {
-        L = l;
-        R = r;
-    }
+    public Score() {}
 
 }

@@ -8,8 +8,6 @@ public class Paddle {
     public final int color;
     public int center;
 
-    public int[] pixels = new int[width * height];
-
     public Paddle(int x, int y, int color) {
         this.xPos = x;
         this.yPos = y;

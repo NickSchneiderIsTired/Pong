@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 
 public class Keyboard implements KeyListener {
 
-    public boolean[] keys = new boolean[65536];
+    private final boolean[] keys = new boolean[65536];
     public boolean up1, down1, up2, down2, esc, enter;
 
     public void update() {

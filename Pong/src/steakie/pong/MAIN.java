@@ -8,24 +8,25 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import steakie.pong.elemente.BALL;
 import steakie.pong.elemente.Paddle;
-import steakie.pong.elemente.Spielstand;
+import steakie.pong.elemente.Score;
 
 public class MAIN extends JFrame implements Runnable {
 	private static final long serialVersionUID = 1L;
 
-	public static int width = 640;
-	public static int height = 360;
-	public static int scale = 2;
+	public static final int width = 640;
+	public static final int height = 360;
+	private static final int scale = 2;
 
 	private Thread thread;
 	private Graphics g;
 	private JFrame frame;
 	private SCREEN screen;
-	private static Spielstand spielstand;
+	private static Score score;
+	private Font font;
 
 	private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
@@ -33,23 +34,23 @@ public class MAIN extends JFrame implements Runnable {
 	private boolean running = false;
 	private Keyboard keys;
 
-	public Paddle paddle1;
-	public Paddle paddle2;
+	private Paddle paddle1;
+	private Paddle paddle2;
 
-	public BALL ball;
+	private BALL ball;
 
 	public MAIN() {
-
 		Dimension size = new Dimension(width * scale, height * scale);
 		setPreferredSize(size);
 		frame = this;
 		setUndecorated(true);
 		keys = new Keyboard();
-		spielstand = new Spielstand(0, 0);
+		font = new Font("Arial", Font.BOLD, 70);
+		score = new Score();
 		screen = new SCREEN(width, height, keys);
 		paddle1 = new Paddle(18, 155, 0x00ff00);
 		paddle2 = new Paddle(612, 155, 0xff0000);
-		ball = new BALL(315, 180, 1, spielstand);
+		ball = new BALL(score);
 
 		addKeyListener(keys);
 	}
@@ -60,7 +61,7 @@ public class MAIN extends JFrame implements Runnable {
 		thread.start();
 	}
 
-	public synchronized void stop() {
+	private synchronized void stop() {
 		running = false;
 		try {
 			thread.join();
@@ -86,7 +87,7 @@ public class MAIN extends JFrame implements Runnable {
 		stop();
 	}
 
-	public void render() {
+	private void render() {
 		BufferStrategy bs = getBufferStrategy();
 		if (bs == null) {
 			createBufferStrategy(3);
@@ -106,14 +107,14 @@ public class MAIN extends JFrame implements Runnable {
 
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
 
-		// Spielstand
+		// Score
 		g.setColor(new Color(0xD5F02B));
-		Font font = new Font("Arial", Font.BOLD, 70);
 		g.setFont(font);
-		g.drawString(spielstand.L + " : " + spielstand.R, 570, 60);
+		g.drawString(score.L + " : " + score.R, 570, 60);
 		g.setColor(new Color(0x117AF2));
 		g.drawString("" + ball.time, getWidth() - 85, 70);
 
+		//Render Ball
 		g.setColor(Color.ORANGE);
 		g.fillOval((int) ball.xPos * scale, (int) ball.yPos * scale, BALL.size * scale, BALL.size * scale);
 
@@ -122,36 +123,30 @@ public class MAIN extends JFrame implements Runnable {
 
 	}
 
-	public static Spielstand gibSpielstand() {
-		return spielstand;
-	}
+	private double paddleMoveSpeed = 3;
 
-	double movespeed = 3;
-
-	public void update() {
+	private void update() {
 		keys.update();
 
 		if (paddle1.yPos < height - paddle1.height - 2 && keys.down1) {
-			paddle1.yPos += movespeed;
+			paddle1.yPos += paddleMoveSpeed;
 		}
 
 		if (keys.up1 && paddle1.yPos > 2) {
-			paddle1.yPos -= movespeed;
+			paddle1.yPos -= paddleMoveSpeed;
 		}
 
 		if (paddle2.yPos < height - paddle2.height - 2 && keys.down2) {
-			paddle2.yPos += movespeed;
+			paddle2.yPos += paddleMoveSpeed;
 		}
 
 		if (keys.up2 && paddle2.yPos > 2) {
-			paddle2.yPos -= movespeed;
+			paddle2.yPos -= paddleMoveSpeed;
 		}
-
-		// System.out.println(ball.angle);
 
 		screen.updateBall(ball);
 
-		screen.schlag(ball, paddle1, paddle2);
+		screen.shoot(ball, paddle1, paddle2);
 
 		if (keys.esc) {
 			System.exit(0);
@@ -166,7 +161,7 @@ public class MAIN extends JFrame implements Runnable {
 
 		game.setTitle("Pong");
 		game.pack();
-		game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		game.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		game.setLocationRelativeTo(null);
 
 		game.start();

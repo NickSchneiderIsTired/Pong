@@ -6,27 +6,24 @@ import steakie.pong.MAIN;
 public class BALL {
 
     public double xPos, yPos;
-    public int startxPos = 316;
-    public int startyPos = 180;
+    private final int startXPos = 316;
+    private final int startYPos = 180;
     public static int size = 10;
     public int center;
     public double angle;
-    public double MAXangle = 0.5;
-    private Random random = new Random();
-    public Spielstand spielstand;
+    public final double MAX_ANGLE = 0.5;
+    private final Random random = new Random();
+    private final Score score;
     public boolean playing = false;
-    public double nx, ny;
-    public double DistanceX, DistanceY;
+    private double nx, ny;
+    private double DistanceX, DistanceY;
     public double speed = 1.6;
-    public int a = 1;
+    private int a = 1;
     public int time = 0;
-    public int wandAbstand = 2;
+    private int edgeDistance = 2;
 
-    public BALL(double x, double y, int angle, Spielstand s) {
-        xPos = x;
-        yPos = y;
-        this.angle = angle;
-        spielstand = s;
+    public BALL(Score s) {
+        score = s;
     }
 
     public void update() {
@@ -44,12 +41,12 @@ public class BALL {
         }
 
         if (xPos <= 1) {
-            spielstand.R++;
+            score.R++;
             reset();
         }
 
         if (xPos >= MAIN.width - size - 1) {
-            spielstand.L++;
+            score.L++;
             reset();
         }
 
@@ -58,33 +55,21 @@ public class BALL {
     public void updateCenter() {
         center = (int) yPos + (size / 2);
     }
-
-    public void specialMove() {
-        if (size == 10) {
-            size = 30;
-            return;
-        }
-        if (size == 30) {
-            size = 10;
-        }
-    }
     
-    
-
     public void setAngle(double angle) {
     	System.out.println(angle);
         this.angle = angle;
     }
 
-    public void reset() {
-        xPos = startxPos;
-        yPos = startyPos;
+    private void reset() {
+        xPos = startXPos;
+        yPos = startYPos;
         playing = false;
         speed = 1.6;
         size = 10;
         a = 1;
         time = 0;
-        wandAbstand = 2;
+        edgeDistance = 2;
     }
 
     public void speedUp(double speed) {
@@ -93,16 +78,16 @@ public class BALL {
 
     public void calcAngle() {
 
-        int Punkt = random.nextInt(360);
+        int point = random.nextInt(360);
         
-        int seitenWechsel = random.nextInt(2);
-        if (seitenWechsel == 1) {
-            DistanceX = MAIN.width - (startxPos + size / 2);
+        int sideChange = random.nextInt(2);
+        if (sideChange == 1) {
+            DistanceX = MAIN.width - (startXPos + size / 2);
         } else {
-            DistanceX = 0 - (startxPos + size / 2);
+            DistanceX = 0 - (startXPos + size / 2);
         }
 
-        DistanceY = Punkt - (startyPos + size / 2);
+        DistanceY = point - (startYPos + size / 2);
 
         angle = Math.atan2(DistanceY, DistanceX);
 
@@ -113,30 +98,30 @@ public class BALL {
         ny = Math.sin(angle);
     }
 
-    public void getBoarder() {
+    private void getBoarder() {
 
         if (speed > 3.6) {
-            wandAbstand = 3;
+            edgeDistance = 3;
         }
 
         if (speed > 5.5) {
-            wandAbstand = 4;
+            edgeDistance = 4;
         }
 
-        if (yPos > wandAbstand && yPos < (MAIN.height - size - wandAbstand)) {
-            return;
+        if (yPos > edgeDistance && yPos < (MAIN.height - size - edgeDistance)) {
+
         } else {
-            getAusfallswinkel();
+            getAngleOfReflection();
         }
 
     }
 
-    public void getAusfallswinkel() {
+    private void getAngleOfReflection() {
         angle *= -1;
         getDir();
     }
 
-    public void move() {
+    private void move() {
 
         xPos += speed * nx;
         yPos += speed * ny;
