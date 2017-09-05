@@ -47,7 +47,7 @@ public class SCREEN {
 			if (ball.xPos <= paddle1.xPos + paddle1.width && ball.xPos > paddle1.xPos + paddle1.width - ball.speed) {
 				if (bot >= paddle1.yPos && top <= paddle1.yPos + paddle1.height) {
 
-					getShotanglePaddleAddition(paddle1, ball);
+					getShotAnglePaddleAddition(paddle1, ball);
 					ball.getDir();
 					ball.speedUp(0.2);
 				}
@@ -57,7 +57,7 @@ public class SCREEN {
 			if (ball.xPos + BALL.size >= paddle2.xPos && ball.xPos + BALL.size < paddle2.xPos + ball.speed) {
 				if (bot >= paddle2.yPos && top <= paddle2.yPos + paddle2.height) {
 
-					getShotanglePaddleAddition2(paddle2, ball);
+					getShotAnglePaddleAddition2(paddle2, ball);
 					ball.getDir();
 					ball.speedUp(0.2);
 				}
@@ -66,7 +66,7 @@ public class SCREEN {
 	}
 
 
-	private void getShotanglePaddleAddition(Paddle p, BALL ball) {
+	private void getShotAnglePaddleAddition(Paddle p, BALL ball) {
 		p.updateCenter();
 		ball.updateCenter();
 
@@ -110,7 +110,7 @@ public class SCREEN {
 
 	}
 
-	private void getShotanglePaddleAddition2(Paddle p, BALL ball) {
+	private void getShotAnglePaddleAddition2(Paddle p, BALL ball) {
 		p.updateCenter();
 		ball.updateCenter();
 

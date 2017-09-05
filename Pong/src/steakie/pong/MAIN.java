@@ -158,7 +158,6 @@ public class MAIN extends JFrame implements Runnable {
 		MAIN game = new MAIN();
 		game.setResizable(false);
 		game.setVisible(true);
-
 		game.setTitle("Pong");
 		game.pack();
 		game.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

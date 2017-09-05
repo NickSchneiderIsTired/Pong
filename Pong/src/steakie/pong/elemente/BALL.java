@@ -77,7 +77,6 @@ public class BALL {
     }
 
     public void calcAngle() {
-
         int point = random.nextInt(360);
         
         int sideChange = random.nextInt(2);

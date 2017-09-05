@@ -7,9 +7,12 @@ package steakie.pong.elemente;
 
 public class Score {
 
-    public int L = 0;
-    public int R = 0;
+    public int L;
+    public int R;
 
-    public Score() {}
+    public Score() {
+        L = 0;
+        R = 0;
+    }
 
 }

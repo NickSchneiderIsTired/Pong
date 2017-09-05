@@ -9,8 +9,8 @@ public class Paddle {
     public int center;
 
     public Paddle(int x, int y, int color) {
-        this.xPos = x;
-        this.yPos = y;
+        xPos = x;
+        yPos = y;
         this.color = color;
     }
 
